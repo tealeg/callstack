@@ -10,7 +10,10 @@ import (
 func FramesAbove(match string, maxDepth int) *runtime.Frames {
 	var rpc []uintptr
 
-	rpc = make([]uintptr, maxDepth)
+	// We add 1 to maxDepth because we always need the layer one
+	// below the matching one - if you want to get one result
+	// back, you need to grab 2 frames.
+	rpc = make([]uintptr, maxDepth+1)
 	count := runtime.Callers(1, rpc)
 	if count < 1 {
 		// No callers found
