@@ -1,4 +1,4 @@
-package framesabove
+package callstack
 
 import (
 	"runtime"
@@ -23,6 +23,9 @@ func assertFrame(t *testing.T, match string, frame runtime.Frame) {
 }
 
 func nextFrame(t *testing.T, frames *runtime.Frames) runtime.Frame {
+	if frames == nil {
+		t.Fatal("Nil frames")
+	}
 	result, more := frames.Next()
 	if !more {
 		t.Fatal("Unexpected end of Frames")
@@ -31,21 +34,21 @@ func nextFrame(t *testing.T, frames *runtime.Frames) runtime.Frame {
 }
 
 func TestFramesAbove(t *testing.T) {
-	frames := intermediateA("github.com/tealeg/framesabove.FramesAbove")
+	frames := intermediateA("github.com/tealeg/callstack.FramesAbove")
 	frame := nextFrame(t, frames)
-	assertFrame(t, "github.com/tealeg/framesabove.intermediateB", frame)
+	assertFrame(t, "github.com/tealeg/callstack.intermediateB", frame)
 	frame = nextFrame(t, frames)
-	assertFrame(t, "github.com/tealeg/framesabove.intermediateA", frame)
+	assertFrame(t, "github.com/tealeg/callstack.intermediateA", frame)
 	frame = nextFrame(t, frames)
-	assertFrame(t, "github.com/tealeg/framesabove.TestFramesAbove", frame)
+	assertFrame(t, "github.com/tealeg/callstack.TestFramesAbove", frame)
 
-	frames = intermediateA("github.com/tealeg/framesabove.intermediateB")
+	frames = intermediateA("github.com/tealeg/callstack.intermediateB")
 	frame = nextFrame(t, frames)
-	assertFrame(t, "github.com/tealeg/framesabove.intermediateA", frame)
+	assertFrame(t, "github.com/tealeg/callstack.intermediateA", frame)
 	frame = nextFrame(t, frames)
-	assertFrame(t, "github.com/tealeg/framesabove.TestFramesAbove", frame)
+	assertFrame(t, "github.com/tealeg/callstack.TestFramesAbove", frame)
 
-	frames = intermediateA("github.com/tealeg/framesabove.intermediateA")
+	frames = intermediateA("github.com/tealeg/callstack.intermediateA")
 	frame = nextFrame(t, frames)
-	assertFrame(t, "github.com/tealeg/framesabove.TestFramesAbove", frame)
+	assertFrame(t, "github.com/tealeg/callstack.TestFramesAbove", frame)
 }
